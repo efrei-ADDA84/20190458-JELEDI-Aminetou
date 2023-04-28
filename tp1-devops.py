@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-
+'''''
 import os
 import requests
 
@@ -21,6 +21,30 @@ def get_weather(latitude, longitude):
 
 
 print(get_weather(48.8566, 2.3522))
+'''
+from flask import Flask, request
+import os
+import requests
 
+app = Flask(__name__)
+api_key = os.environ.get("API_KEY")
+
+@app.route('/weather', methods=["GET"])
+def get_weather():
+    latitude = request.args.get('lat')
+    longitude = request.args.get('lon')
+    print(latitude)
+    print(longitude)
+
+    url = 'https://api.openweathermap.org/data/2.5/weather?lat=' + latitude + '&lon=' +longitude+ '&appid='+api_key
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        return response.json()
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=8081)
+    print(app)
+    
 
 
